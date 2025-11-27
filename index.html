@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Lebanon Journeys — Explore the Cedar Land</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400;600;700&family=Noto+Naskh+Arabic:wght@400;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --lebanon-red: #d40000;
+      --lebanon-green: #006a4e;
+      --lebanon-white: #ffffff;
+      --ink: #1A1A1A;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0;background:var(--lebanon-white);color:var(--ink)}
+    body{font-family:'Noto Sans',system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif; line-height:1.6}
+
+    header{background: var(--lebanon-red);color: var(--lebanon-white);padding:64px 24px 24px;}
+    .container{max-width:1100px;margin:0 auto;padding:0 20px}
+    .topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px}
+    .brand{display:flex;gap:12px;align-items:center}
+    .brand-logo{width:40px;height:40px;border-radius:50%;background:var(--lebanon-green)}
+    .brand h1{font-size:20px;margin:0;font-weight:700}
+    .hero{display:grid;grid-template-columns:1.1fr 0.9fr;gap:24px;align-items:center}
+    .hero h2{font-size:40px;margin:8px 0 12px}
+    .panel{background:var(--lebanon-white);border:2px solid var(--lebanon-green);border-radius:14px;padding:16px}
+
+    nav{background:var(--lebanon-white);border-bottom:4px solid var(--lebanon-red);position:sticky;top:0;z-index:5}
+    nav .tabs{display:flex;gap:12px;overflow:auto;padding:10px 0}
+    nav a{color:var(--lebanon-green);text-decoration:none;font-weight:600;padding:10px 14px;border-radius:12px}
+    nav a:hover{background:#f7f7f7}
+
+    section{padding:36px 0}
+    .section-title h3{margin:0;font-size:24px;color:var(--lebanon-green)}
+    .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px}
+    .card{background:var(--lebanon-white);border:1px solid var(--lebanon-green);border-radius:16px;overflow:hidden;cursor:pointer}
+    .card .cover{height:160px;background-size:cover;background-position:center}
+    .card .body{padding:14px}
+    .tag{display:inline-block;background:var(--lebanon-red);color:var(--lebanon-white);border-radius:999px;padding:4px 10px;font-size:12px}
+    .card h4{margin:10px 0 8px;font-size:18px;color:var(--lebanon-green)}
+    .card p{margin:0;color:#444;font-size:13px}
+
+    /* Modal */
+    .modal {display:none;position:fixed;z-index:10;left:0;top:0;width:100%;height:100%;background:rgba(0,0,0,0.6)}
+    .modal-content {background:#fff;margin:4% auto;padding:0;border-radius:12px;width:95%;max-width:900px;overflow:hidden}
+    .modal-header {display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid #eee}
+    .modal-header h2{margin:0;color:var(--lebanon-green)}
+    .close {font-size:28px;cursor:pointer;color:var(--lebanon-red)}
+    .modal-body{display:grid;grid-template-columns:320px 1fr}
+    .modal-image{height:100%;min-height:280px;background-size:cover;background-position:center}
+    .tabs{display:flex;border-bottom:1px solid #eee}
+    .tabs button{flex:1;padding:10px 12px;border:none;background:#fafafa;cursor:pointer;font-weight:600;color:#333}
+    .tabs button.active{background:#fff;border-bottom:2px solid var(--lebanon-green);color:var(--lebanon-green)}
+    .tab-content{padding:14px 18px}
+    .tab-content p{margin:0 0 10px}
+    .tab-content ul{margin:6px 0 0;padding-left:18px}
+    @media (max-width: 780px){
+      .modal-body{grid-template-columns:1fr}
+      .modal-image{height:220px}
+    }
+      .panel {
+  background: var(--lebanon-white);
+  border: 2px solid var(--lebanon-green);
+  border-radius: 14px;
+  padding: 16px;
+  color: var(--ink); /* <-- this makes the text dark */
+}
+    
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <div class="topbar">
+        <div class="brand">
+          <div class="brand-logo"></div>
+          <h1>Lebanon Journeys</h1>
+        </div>
+      </div>
+      <div class="hero">
+        <div>
+          <h2>Discover Lebanon’s most famous places</h2>
+          <p>From ancient ruins to mountain slopes and coastal towns, Lebanon is a land of contrasts and beauty.</p>
+        </div>
+        <div class="panel">
+  <h4>Plan at a glance</h4>
+  <p><strong>Best time:</strong> Spring & fall for mild weather, summer for beaches, winter for snow.</p>
+  <p><strong>Distances:</strong> Most sites are 30–120 minutes from Beirut by car.</p>
+  
+</div>
+
+      </div>
+    </div>
+  </header>
+
+  <nav>
+    <div class="container">
+      <div class="tabs">
+        <a href="#destinations">Destinations</a>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    <section id="destinations">
+      <div class="container">
+        <div class="section-title"><h3>Destinations</h3></div>
+        <div id="cards" class="cards"></div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Modal -->
+  <div id="infoModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="modalTitle">Destination</h2>
+        <span class="close" onclick="closeInfo()">&times;</span>
+      </div>
+      <div class="modal-body">
+        <div id="modalImage" class="modal-image"></div>
+        <div>
+          <div class="tabs">
+            <button id="tabOverview" class="active" onclick="setTab('overview')">Overview</button>
+            <button id="tabHistory" onclick="setTab('history')">History</button>
+            <button id="tabHighlights" onclick="setTab('highlights')">Highlights</button>
+          </div>
+          <div id="tabContent" class="tab-content"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Data: Ensure images folder is next to index.html with these exact filenames (.jpg)
+    const destinations = [
+      {id:'jeita',name:'Jeita Grotto',tag:'Caves',cover:'images/jeita.jpg',
+        overview:'Two-level karst caves with boat rides and vast galleries of stalactites and stalagmites.',
+        history:'Explored in the 19th–20th centuries and developed for tourism; a national symbol of Lebanon’s natural heritage.',
+        highlights:['Lower cave boat ride','Upper galleries vistas','Seasonal lighting','Family-friendly pathways']},
+
+      {id:'baalbek',name:'Baalbek',tag:'Ancient',cover:'images/baalbek.jpg',
+        overview:'Monumental Roman temple complex in the Beqaa Valley.',
+        history:'Known as Heliopolis under Rome; famed for the Temples of Jupiter, Bacchus, and Venus.',
+        highlights:['Colossal columns','Temple of Bacchus','Stone reliefs','Cultural festivals']},
+
+      {id:'anjar',name:'Anjar',tag:'Ruins',cover:'images/anjar.jpg',
+        overview:'Umayyad ruins with a unique urban grid and palatial remains.',
+        history:'Founded in the early 8th century; shows early Islamic city planning.',
+        highlights:['Palaces & mosques','Markets','City walls','UNESCO listing']},
+
+      {id:'beiteddine',name:'Beiteddine',tag:'Palace',cover:'images/beiteddine.jpg',
+        overview:'19th-century mountain palace blending Lebanese and Ottoman styles.',
+        history:'Built by Emir Bashir II; later used for national events and festivals.',
+        highlights:['Courtyards','Mosaics museum','Ornate halls','Summer festivals']},
+
+      {id:'deirelqamar',name:'Deir el Qamar',tag:'Heritage',cover:'images/deirelqamar.jpg',
+        overview:'Historic town square with preserved stone houses and landmarks.',
+        history:'Former seat of Mount Lebanon’s emirs from the 16th–19th centuries.',
+        highlights:['Main square','Fakhreddine Mosque','Old palaces','Craft shops & cafés']},
+
+      {id:'byblos',name:'Byblos (Jbeil)',tag:'Historic',cover:'images/byblos.jpg',
+        overview:'Ancient Phoenician port with a charming harbor, Crusader castle, and souks.',
+        history:'Among the oldest continuously inhabited cities; a hub for trade and alphabetic script.',
+        highlights:['Crusader castle','Archaeological mound','Old souks','Seaside restaurants']},
+
+      {id:'sidon',name:'Sidon (Saida)',tag:'Coastal',cover:'images/sidon.jpg',
+        overview:'Historic coastal city with a Sea Castle and vibrant old souks.',
+        history:'Major Phoenician center later shaped by Crusader, Mamluk, and Ottoman eras.',
+        highlights:['Sea Castle','Khan el Franj','Soap museum','Street food']},
+
+      {id:'tyre',name:'Tyre (Sour)',tag:'UNESCO',cover:'images/tyre.jpg',
+        overview:'Relaxed seaside town with extensive Roman ruins and a long sandy beach.',
+        history:'Phoenician powerhouse known for purple dye and seafaring; Roman and Byzantine layers remain.',
+        highlights:['Hippodrome','Coastal ruins','Family beach','Harbor cafés']},
+
+      {id:'batroun',name:'Batroun',tag:'Coastal',cover:'images/batroun.jpg',
+        overview:'Lively coastal town with the Phoenician sea wall and beach clubs.',
+        history:'Ancient settlement with medieval churches and long maritime traditions.',
+        highlights:['Phoenician wall','Old harbor','Mseilha Fort nearby','Lemonade tradition']},
+
+      {id:'raouche',name:'Pigeon Rocks (Raouché)',tag:'Viewpoint',cover:'images/raouche.jpg',
+        overview:'Iconic sea stacks off Beirut’s corniche; best at sunset.',
+        history:'Formed by marine erosion; enduring symbol of Beirut’s coastline.',
+        highlights:['Sunset views','Promenade walk','Boat tours','Cliffside cafés']},
+
+      {id:'harissa',name:'Harissa & Teleferique',tag:'Panorama',cover:'images/harissa.jpg',
+        overview:'Hilltop shrine with sweeping views over Jounieh Bay.',
+        history:'Our Lady of Lebanon (1950s) crowns the hill; cable car connects coast to sanctuary.',
+        highlights:['Cable car ride','Statue & chapel','Bay panoramas','Nearby restaurants']},
+
+      {id:'tripoli',name:'Tripoli',tag:'Souks',cover:'images/tripoli.jpg',
+        overview:'Northern city with sprawling souks and Mamluk-era architecture.',
+        history:'Crusader origins at the citadel; later a center of craft and trade.',
+        highlights:['Citadel','Copper & textiles','Hammams','Sweets & street food']},
+
+      {id:'bcharre',name:'Bcharre',tag:'Culture',cover:'images/bcharre.jpg',
+        overview:'Mountain town linked to Gibran Khalil Gibran and cedar forests.',
+        history:'Gateway to Cedars of God and Qadisha Valley; rich literary heritage.',
+        highlights:['Gibran Museum','Cedar trails','Winter skiing nearby','Mountain cuisine']},
+
+      {id:'qadisha',name:'Qadisha Valley',tag:'Valley',cover:'images/qadisha.jpg',
+        overview:'Monastic valley with hermitages carved into cliffs.',
+        history:'Centuries of spiritual life shaped the valley’s identity and heritage.',
+        highlights:['Cliffside monasteries','River hikes','Serene viewpoints','Heritage sites']},
+
+      {id:'cedars',name:'Cedars of God',tag:'Forests',cover:'images/cedars.jpg',
+        overview:'Ancient cedar grove at high altitude with quiet trails.',
+        history:'Remnant of historic forests praised in texts; emblematic of Lebanon.',
+        highlights:['Snow in winter','Quiet trails','Small chapel','Artisan woodcrafts']},
+
+      {id:'faraya',name:'Faraya–Mzaar',tag:'Mountains',cover:'images/faraya.jpg',
+        overview:'Lebanon’s top ski area with summer hiking and dam views.',
+        history:'Keserwan mountain village expanded into a modern ski hub.',
+        highlights:['Ski slopes','Chabrouh Dam','Scenic drives','Festivals']},
+
+      {id:'baatara',name:'Baatara Gorge',tag:'Waterfall',cover:'images/baatara.jpg',
+        overview:'Dramatic sinkhole with a seasonal waterfall and natural bridges.',
+        history:'Eroded through limestone; spring snowmelt creates peak flow.',
+        highlights:['Karst geology','Three natural bridges','Spring peak','Photo spots']},
+
+      {id:'qaraoun',name:'Lake Qaraoun',tag:'Lake',cover:'images/qaraoun.jpg',
+        overview:'Largest reservoir on the Litani River with cafés and views.',
+        history:'Mid-20th-century dam project for water and power.',
+        highlights:['Birdwatching','Lakeside cafés','Bekaa vistas','Nearby vineyards']},
+
+      {id:'chouwen',name:'Chouwen Lake',tag:'Hike',cover:'images/chouwen.jpg',
+        overview:'Turquoise pools inside Jabal Moussa Biosphere Reserve.',
+        history:'Protected reserve with rich biodiversity and marked trails.',
+        highlights:['Forest hike','Swimming spots','Picnic areas','Wildlife']},
+
+      {id:'tannourine',name:'Tannourine Cedars Reserve',tag:'Reserve',cover:'images/tannourine.jpg',
+        overview:'High-altitude cedar reserve with ridge hikes and lookouts.',
+        history:'Conservation area preserving Lebanon’s emblematic tree.',
+        highlights:['Panoramic lookouts','Cool mountain air','Cedar cones','Trail network']},
+
+      {id:'zahle',name:'Zahlé',tag:'Town',cover:'images/zahle.jpg',
+        overview:'Bekaa town famed for riverside restaurants and arak.',
+        history:'19th–20th century cultural center along the Berdawni.',
+        highlights:['Berdawni cafés','Nearby wineries','Churches','Hill views']}
+    ];
+
+    // Render cards
+    const cardsEl = document.getElementById('cards');
+    cardsEl.innerHTML = destinations.map(d => `
+      <article class="card" onclick="openModal('${d.id}')">
+        <div class="cover" style="background-image:url('${d.cover}')"></div>
+        <div class="body">
+          <span class="tag">${d.tag}</span>
+          <h4>${d.name}</h4>
+          <p>${d.overview}</p>
+        </div>
+      </article>
+    `).join('');
+
+    // Modal logic
+    let currentDest = null;
+    const infoModal = document.getElementById('infoModal');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalImage = document.getElementById('modalImage');
+    const tabContent = document.getElementById('tabContent');
+    const tabs = {
+      overview: document.getElementById('tabOverview'),
+      history: document.getElementById('tabHistory'),
+      highlights: document.getElementById('tabHighlights')
+    };
+
+    function openModal(id){
+      currentDest = destinations.find(x => x.id === id);
+      if(!currentDest) return;
+      modalTitle.textContent = currentDest.name;
+      modalImage.style.backgroundImage = `url('${currentDest.cover}')`;
+      infoModal.style.display = 'block';
+      setTab('overview');
+    }
+
+    function closeInfo(){
+      infoModal.style.display = 'none';
+      currentDest = null;
+    }
+
+    function setTab(tab){
+      Object.keys(tabs).forEach(t => tabs[t].classList.toggle('active', t === tab));
+      if(!currentDest) return;
+      if(tab === 'overview'){
+        tabContent.innerHTML = `<p>${currentDest.overview}</p>`;
+      } else if(tab === 'history'){
+        tabContent.innerHTML = `<p>${currentDest.history}</p>`;
+      } else {
+        tabContent.innerHTML = `
+          <ul>
+            ${currentDest.highlights.map(h => `<li>${h}</li>`).join('')}
+          </ul>
+        `;
+      }
+    }
+
+    // Close modal on background click or ESC
+    infoModal.addEventListener('click', (e)=>{
+      if(e.target.id === 'infoModal') closeInfo();
+    });
+    document.addEventListener('keydown', (e)=>{
+      if(e.key === 'Escape') closeInfo();
+    });
+  </script>
+</body>
+</html> 
